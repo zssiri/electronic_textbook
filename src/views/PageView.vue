@@ -1,6 +1,6 @@
 <template>
   <div v-if="currentSection" class="reader-page-wrapper">
-    <div class="fullscreen-bg" :style="{ backgroundImage: `url('${currentSectionImage}')` }"></div>
+    <div class="fullscreen-bg" :style="{ backgroundImage: `url('${resolveImage(currentSectionImage)}')` }"></div>
   </div>
 
   <div v-if="currentSection" class="reader-area">
@@ -35,7 +35,7 @@
         </div>
 
         <div v-if="topic.topic_image" class="topic-image-container">
-          <img :src="`${baseUrl}images/${topic.topic_image}`" :alt="topic.topic_title" />
+          <img :src="resolveImage(topic.topic_image)" :alt="topic.topic_title" />
         </div>
 
         <div class="extra-assignments" v-if="topic.assignments">
@@ -81,10 +81,6 @@ export default {
   },
 
   computed: {
-    baseUrl() {
-      return import.meta.env.BASE_URL
-    },
-
     currentSection() {
       if (!this.id) return null
       const sectionId = parseInt(this.id.split('.')[0])
@@ -96,22 +92,41 @@ export default {
     currentSectionImage() {
       if (!this.currentSection) return ''
 
-      const folderMap = {
-        1: 'psyhology',
-        2: 'buisnes-idia',
-        3: 'buisnes-model',
-        4: 'marketing-and-explore',
-        5: 'strategy',
-        6: 'main-resources',
-        7: 'operacionaya-deyatelnost',
-        8: 'finans-model',
-        9: 'investiciya-and-progres',
-        10: 'strategy-of-progres',
-        11: 'otvetstvennost'
+      const map = {
+        1: 'psyhology.png',
+        2: 'buisnes-idia.png',
+        3: 'buisnes-model.png',
+        4: 'marketing-and-explore.png',
+        5: 'strategy.png',
+        6: 'main-resources.png',
+        7: 'operacionaya-deyatelnost.png',
+        8: 'finans-model.png',
+        9: 'investiciya-and-progres.png',
+        10: 'strategy-of-progres.png',
+        11: 'otvetstvennost.png'
       }
 
-      const folder = folderMap[this.currentSection.section_id]
-      return `${this.baseUrl}images/${folder}.png`
+      return map[this.currentSection.section_id] || ''
+    }
+  },
+
+  methods: {
+    resolveImage(file) {
+      // ЖЁСТКО и НАДЁЖНО для GitHub Pages
+      return `/electronic_textbook/images/${file}`
+    },
+
+    scrollToTopic(topicId) {
+      this.$nextTick(() => {
+        const el = document.getElementById(`topic-${topicId}`)
+        const container = document.querySelector('.scroll-container')
+        if (el && container) {
+          container.scrollTo({
+            top: el.offsetTop - 40,
+            behavior: 'smooth'
+          })
+        }
+      })
     }
   },
 
@@ -134,21 +149,6 @@ export default {
         : this.id
 
       setTimeout(() => this.scrollToTopic(targetId), 600)
-    }
-  },
-
-  methods: {
-    scrollToTopic(topicId) {
-      this.$nextTick(() => {
-        const el = document.getElementById(`topic-${topicId}`)
-        const container = document.querySelector('.scroll-container')
-        if (el && container) {
-          container.scrollTo({
-            top: el.offsetTop - 40,
-            behavior: 'smooth'
-          })
-        }
-      })
     }
   }
 }
