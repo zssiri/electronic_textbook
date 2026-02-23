@@ -112,7 +112,6 @@ export default {
 
   methods: {
     resolveImage(file) {
-      // ЖЁСТКО и НАДЁЖНО для GitHub Pages
       return `/electronic_textbook/images/${file}`
     },
 

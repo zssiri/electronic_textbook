@@ -12,8 +12,11 @@
                     <h2 v-if="!$route.params.id">Электронный учебник</h2>
 
                     <nav v-if="$route.params.id && currentSectionTopics.length" class="breadcrumb-nav">
-                        <router-link to="/" exact class="nav-link-home">Главная</router-link>
+                        <router-link to="/" exact class="nav-link-home">
+                            Главная
+                        </router-link>
                         <span class="sep">/</span>
+
                         <div class="anchor-links">
                             <router-link v-for="t in currentSectionTopics" :key="t.topic_id"
                                 :to="`/topic/${t.topic_id}#topic-${t.topic_id}`"
@@ -31,18 +34,22 @@
 
         <aside class="side-panel" :class="{ 'panel-open': tocOpen }">
             <div class="panel-header">Содержание</div>
+
             <nav class="toc-nav">
                 <ul>
-                    <li v-for="(section, index) in sectionsWithImages" :key="index" class="section-item">
+                    <li v-for="(section, index) in sectionsWithImages" :key="section.section_id" class="section-item">
                         <button class="section-trigger" @click="toggleSection(index)">
                             <span class="num">{{ section.section_id }}</span>
                             <span class="txt">{{ section.section_title }}</span>
-                            <span class="chevron" :class="{ rotate: openSections.includes(index) }">▾</span>
+                            <span class="chevron" :class="{ rotate: openSections.includes(index) }">
+                                ▾
+                            </span>
                         </button>
 
                         <transition name="expand">
                             <div v-show="openSections.includes(index)" class="sub-panel">
-                                <img :src="section.image" class="mini-img" alt="">
+                                <img v-if="section.image" :src="section.image" class="mini-img" alt="" />
+
                                 <ul class="subtopics">
                                     <li v-for="topic in section.topics" :key="topic.topic_id">
                                         <router-link :to="`/topic/${topic.topic_id}#topic-${topic.topic_id}`"
@@ -72,81 +79,106 @@
 import lessonsData from '@/data/lessons.json'
 
 export default {
-    name: "MainView",
+    name: 'MainView',
+
     data() {
         return {
             tocOpen: false,
             isScrolled: false,
-            openSections: [-1],
+            openSections: [],
             rawLessons: lessonsData.lessons,
+
             folderMap: {
-                1: "psyhology",
-                2: "buisnes-idia",
-                3: "buisnes-model",
-                4: "marketing-and-explore",
-                5: "strategy",
-                6: "main-resources",
-                7: "operacionaya-deyatelnost",
-                8: "finans-model",
-                9: "investiciya-and-progres",
-                10: "strategy-of-progres",
-                11: "otvetstvennost"
+                1: 'psyhology',
+                2: 'buisnes-idia',
+                3: 'buisnes-model',
+                4: 'marketing-and-explore',
+                5: 'strategy',
+                6: 'main-resources',
+                7: 'operacionaya-deyatelnost',
+                8: 'finans-model',
+                9: 'investiciya-and-progres',
+                10: 'strategy-of-progres',
+                11: 'otvetstvennost'
             }
-        };
-    },
-    computed: {
-        sectionsWithImages() {
-            return this.rawLessons.map(section => ({
-                ...section,
-                image: `/images/${this.folderMap[section.section_id] || 'default'}.png`
-            }));
-        },
-        currentSectionTopics() {
-            const topicId = this.$route.params.id;
-            if (!topicId) return [];
-            const secId = parseInt(topicId.split('.')[0]);
-            const section = this.rawLessons.find(s => s.section_id === secId);
-            return section ? section.topics : [];
         }
     },
+
+    computed: {
+        baseUrl() {
+            return import.meta.env.BASE_URL
+        },
+
+        sectionsWithImages() {
+            return this.rawLessons.map(section => {
+                const folder = this.folderMap[section.section_id]
+
+                return {
+                    ...section,
+                    image: folder
+                        ? `${this.baseUrl}images/${folder}.png`
+                        : ''
+                }
+            })
+        },
+
+        currentSectionTopics() {
+            const topicId = this.$route.params.id
+            if (!topicId) return []
+
+            const secId = parseInt(topicId.split('.')[0])
+            const section = this.rawLessons.find(
+                s => s.section_id === secId
+            )
+
+            return section ? section.topics : []
+        }
+    },
+
     methods: {
         toggleMenu() {
-            this.tocOpen = !this.tocOpen;
-            document.body.style.overflow = this.tocOpen ? 'hidden' : '';
+            this.tocOpen = !this.tocOpen
+            document.body.style.overflow = this.tocOpen ? 'hidden' : ''
         },
+
         toggleSection(index) {
             if (this.openSections.includes(index)) {
-                this.openSections = this.openSections.filter(i => i !== index);
+                this.openSections = this.openSections.filter(i => i !== index)
             } else {
-                this.openSections.push(index);
+                this.openSections.push(index)
             }
         },
+
         handleScroll(event) {
-            this.isScrolled = event.target.scrollTop > 300;
+            this.isScrolled = event.target.scrollTop > 300
         },
+
         backToTop() {
-            const container = this.$refs.scrollTarget;
+            const container = this.$refs.scrollTarget
             if (container) {
-                container.scrollTo({ top: 0, behavior: 'smooth' });
+                container.scrollTo({ top: 0, behavior: 'smooth' })
             }
         },
+
         handleAnchorClick(topicId) {
-            this.scrollToTopic(topicId);
+            this.scrollToTopic(topicId)
         },
+
         scrollToTopic(topicId) {
             this.$nextTick(() => {
-                const el = document.getElementById(`topic-${topicId}`);
-                const container = this.$refs.scrollTarget;
+                const el = document.getElementById(`topic-${topicId}`)
+                const container = this.$refs.scrollTarget
 
                 if (el && container) {
-                    const yOffset = 100;
-                    const targetY = el.offsetTop - yOffset;
-                    container.scrollTo({ top: targetY, behavior: 'smooth' });
+                    container.scrollTo({
+                        top: el.offsetTop - 100,
+                        behavior: 'smooth'
+                    })
                 }
-            });
+            })
         }
     }
-};
+}
 </script>
 
 <style scoped>
@@ -540,17 +572,17 @@ h2 {
 
 @media (max-width: 1024px) {
     .side-panel {
-        width: 380px; 
+        width: 380px;
     }
 }
 
 @media (max-width: 768px) {
     .main-content {
-        padding: 40px 15px; 
+        padding: 40px 15px;
     }
 
     .side-panel {
-        width: 100%; 
+        width: 100%;
         padding-top: 100px;
     }
 
@@ -573,7 +605,7 @@ h2 {
     }
 
     .anchor-links {
-        overflow-x: auto; 
+        overflow-x: auto;
         width: 100%;
         padding-bottom: 5px;
         -webkit-overflow-scrolling: touch;
@@ -611,7 +643,7 @@ h2 {
     }
 
     .txt {
-        font-size: 13px; 
+        font-size: 13px;
     }
 
     .num {
