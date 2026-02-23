@@ -10,16 +10,16 @@
       class="topic-block">
 
       <span class="badge">Тема {{ topic.topic_id }}</span>
-      
+
       <div class="content-body">
         <h2>{{ topic.topic_title }}</h2>
 
         <ObjectivesCard v-if="topic.objectives" :objectives="topic.objectives" />
 
         <div v-for="(block, index) in topic.content" :key="'block-' + index">
-          
+
           <template v-if="block && block.type">
-            
+
             <p v-if="block.type === 'text'" class="text-paragraph">{{ block.value }}</p>
 
             <TheoryCard v-if="block.type === 'theory'" :theory="block" />
@@ -39,7 +39,7 @@
             <QuizCollectionCard v-if="block.type === 'quiz-collection'" :title="block.title" :items="block.items" />
 
             <FormulaCard v-if="block.type === 'formula'" :value="block.value" />
-            
+
           </template>
         </div>
 
@@ -130,16 +130,27 @@ export default {
       const sectionId = parseInt(this.id.split('.')[0]);
       return lessonsData.lessons.find(s => s.section_id === sectionId);
     },
+    // currentSectionImage() {
+    //   if (!this.currentSection) return '';
+    //   const folderMap = {
+    //     1: "psyhology", 2: "buisnes-idia", 3: "buisnes-model",
+    //     4: "marketing-and-explore", 5: "strategy", 6: "main-resources",
+    //     7: "operacionaya-deyatelnost", 8: "finans-model",
+    //     9: "investiciya-and-progres", 10: "strategy-of-progres", 11: "otvetstvennost"
+    //   };
+    //   const folder = folderMap[this.currentSection.section_id] || 'default';
+    //   return `/images/${folder}.png`;
+    // }
     currentSectionImage() {
       if (!this.currentSection) return '';
       const folderMap = {
-        1: "psyhology", 2: "buisnes-idia", 3: "buisnes-model",
+        1: "psyhology", 2: "buisnes-idie", 3: "buisnes-model",
         4: "marketing-and-explore", 5: "strategy", 6: "main-resources",
         7: "operacionaya-deyatelnost", 8: "finans-model",
         9: "investiciya-and-progres", 10: "strategy-of-progres", 11: "otvetstvennost"
       };
       const folder = folderMap[this.currentSection.section_id] || 'default';
-      return `/images/${folder}.png`;
+      return `images/${folder}.png`;
     }
   }
 }
@@ -253,64 +264,64 @@ export default {
 }
 
 @media (max-width: 768px) {
-    .reader-area {
-        padding: 20px 15px;
-        margin: 0;
-        max-width: 100%;
-    }
+  .reader-area {
+    padding: 20px 15px;
+    margin: 0;
+    max-width: 100%;
+  }
 
-    .btn-home {
-        margin-top: 10px;
-        margin-bottom: 30px;
-        font-size: 14px;
-        padding: 6px 12px;
-    }
+  .btn-home {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-size: 14px;
+    padding: 6px 12px;
+  }
 
-    .content-body h2 {
-        font-size: 24px; 
-        margin-bottom: 20px;
-        line-height: 1.2;
-    }
+  .content-body h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
 
-    .text-paragraph {
-        font-size: 16px; 
-        line-height: 1.6;
-        margin-bottom: 16px;
-        text-indent: 1em; 
-    }
+  .text-paragraph {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    text-indent: 1em;
+  }
 
-    .badge {
-        font-size: 14px;
-        padding: 3px 10px;
-    }
+  .badge {
+    font-size: 14px;
+    padding: 3px 10px;
+  }
 
-    .topic-image-container {
-        margin: 15px 0;
-    }
-    
-    .topic-illustration {
-        border-radius: 8px; 
-    }
+  .topic-image-container {
+    margin: 15px 0;
+  }
 
-    .topic-divider {
-        margin: 40px 0;
-    }
+  .topic-illustration {
+    border-radius: 8px;
+  }
 
-    .fullscreen-bg {
-        width: 150%; 
-        height: 100%;
-        background-position: center right;
-        opacity: 0.04; 
-    }
+  .topic-divider {
+    margin: 40px 0;
+  }
+
+  .fullscreen-bg {
+    width: 150%;
+    height: 100%;
+    background-position: center right;
+    opacity: 0.04;
+  }
 }
 
 @media (max-width: 480px) {
-    .content-body h2 {
-        font-size: 20px;
-    }
-    
-    .text-paragraph {
-        font-size: 15px;
-    }
+  .content-body h2 {
+    font-size: 20px;
+  }
+
+  .text-paragraph {
+    font-size: 15px;
+  }
 }
 </style>
