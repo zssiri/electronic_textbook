@@ -310,6 +310,17 @@ export default {
     background-position: center right;
     opacity: 0.04;
   }
+
+  .fullscreen-bg {
+    width: 100%;           
+    height: 100vh;           
+    background-position: center 20%; 
+    background-size: 80%;    
+    opacity: 0.05;          
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -320,5 +331,10 @@ export default {
   .text-paragraph {
     font-size: 15px;
   }
+
+  .fullscreen-bg {
+      background-size: 100%; 
+      background-position: center 15%;
+    }
 }
 </style>
