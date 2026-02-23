@@ -1,29 +1,19 @@
 <template>
   <div v-if="currentSection" class="reader-page-wrapper">
-    <div
-      class="fullscreen-bg"
-      :style="{ backgroundImage: `url('${currentSectionImage}')` }"
-    ></div>
+    <div class="fullscreen-bg" :style="{ backgroundImage: `url('${currentSectionImage}')` }"></div>
   </div>
 
   <div v-if="currentSection" class="reader-area">
     <router-link to="/" class="btn-home">← На главную</router-link>
 
-    <div
-      v-for="topic in currentSection.topics"
-      :key="topic.topic_id"
-      :id="'topic-' + topic.topic_id"
-      class="topic-block"
-    >
+    <div v-for="topic in currentSection.topics" :key="topic.topic_id" :id="'topic-' + topic.topic_id"
+      class="topic-block">
       <span class="badge">Тема {{ topic.topic_id }}</span>
 
       <div class="content-body">
         <h2>{{ topic.topic_title }}</h2>
 
-        <ObjectivesCard
-          v-if="topic.objectives"
-          :objectives="topic.objectives"
-        />
+        <ObjectivesCard v-if="topic.objectives" :objectives="topic.objectives" />
 
         <div v-for="(block, index) in topic.content" :key="'block-' + index">
           <template v-if="block && block.type">
@@ -38,39 +28,22 @@
             <FactCard v-if="block.type === 'fact'" :text="block.value" />
             <TaskCard v-if="block.type === 'task'" :task="block" />
             <QuizCard v-if="block.type === 'quiz'" :question="block.question" />
-            <ComplexTestCard
-              v-if="block.type === 'complex-test'"
-              :testData="block"
-            />
-            <QuizCollectionCard
-              v-if="block.type === 'quiz-collection'"
-              :title="block.title"
-              :items="block.items"
-            />
+            <ComplexTestCard v-if="block.type === 'complex-test'" :testData="block" />
+            <QuizCollectionCard v-if="block.type === 'quiz-collection'" :title="block.title" :items="block.items" />
             <FormulaCard v-if="block.type === 'formula'" :value="block.value" />
           </template>
         </div>
 
-        <div v-if="topic.image" class="topic-image-container">
-          <img
-            :src="`${baseUrl}images/${topic.image}`"
-            :alt="topic.topic_title"
-            class="topic-illustration"
-          />
+        <div v-if="topic.topic_image" class="topic-image-container">
+          <img :src="`${import.meta.env.BASE_URL}images/${topic.topic_image}`" :alt="topic.topic_title"
+            class="topic-illustration" />
         </div>
 
         <div class="extra-assignments" v-if="topic.assignments">
-          <TaskCard
-            v-for="(t, i) in topic.assignments"
-            :key="'assign-' + i"
-            :task="t"
-          />
+          <TaskCard v-for="(t, i) in topic.assignments" :key="'assign-' + i" :task="t" />
         </div>
 
-        <QuestionsCard
-          v-if="topic.questions"
-          :questions="topic.questions"
-        />
+        <QuestionsCard v-if="topic.questions" :questions="topic.questions" />
       </div>
 
       <hr class="topic-divider" />
