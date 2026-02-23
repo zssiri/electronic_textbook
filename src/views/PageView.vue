@@ -44,7 +44,7 @@
         </div>
 
         <div v-if="topic.image" class="topic-image-container">
-          <img :src="topic.image" :alt="topic.topic_title" class="topic-illustration">
+          <img :src="'.' + topic.image" :alt="topic.topic_title" class="topic-illustration">
         </div>
 
         <div class="extra-assignments" v-if="topic.assignments">
@@ -144,13 +144,14 @@ export default {
     currentSectionImage() {
       if (!this.currentSection) return '';
       const folderMap = {
-        1: "psyhology", 2: "buisnes-idie", 3: "buisnes-model",
+        1: "psyhology", 2: "buisnes-idia", 3: "buisnes-model",
         4: "marketing-and-explore", 5: "strategy", 6: "main-resources",
         7: "operacionaya-deyatelnost", 8: "finans-model",
         9: "investiciya-and-progres", 10: "strategy-of-progres", 11: "otvetstvennost"
       };
       const folder = folderMap[this.currentSection.section_id] || 'default';
-      return `images/${folder}.png`;
+ 
+      return `./images/${folder}.png`;
     }
   }
 }
