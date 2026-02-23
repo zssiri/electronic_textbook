@@ -14,6 +14,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-  base: '/electronic_textbook/', 
-  plugins: [vue()]
+  plugins: [vue()],
+  base: '/electronic_textbook/',
 })

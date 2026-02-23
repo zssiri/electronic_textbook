@@ -89,13 +89,6 @@ export default {
     FormulaCard,
     TheoryCard
   },
-  computed: {
-    currentSection() {
-      if (!this.id) return null;
-      const sectionId = parseInt(this.id.split('.')[0]);
-      return lessonsData.lessons.find(s => s.section_id === sectionId);
-    }
-  },
   watch: {
     id(newId) {
       this.scrollToTopic(newId);
