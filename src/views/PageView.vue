@@ -35,8 +35,7 @@
         </div>
 
         <div v-if="topic.topic_image" class="topic-image-container">
-          <img :src="`${import.meta.env.BASE_URL}images/${topic.topic_image}`" :alt="topic.topic_title"
-            class="topic-illustration" />
+          <img :src="`${baseUrl}images/${topic.topic_image}`" :alt="topic.topic_title" />
         </div>
 
         <div class="extra-assignments" v-if="topic.assignments">
