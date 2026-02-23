@@ -4,33 +4,43 @@
   </div>
 
   <div v-if="currentSection" class="reader-area">
-
     <router-link to="/" class="btn-home">← На главную</router-link>
 
     <div v-for="topic in currentSection.topics" :key="topic.topic_id" :id="'topic-' + topic.topic_id"
       class="topic-block">
 
       <span class="badge">Тема {{ topic.topic_id }}</span>
+      
       <div class="content-body">
         <h2>{{ topic.topic_title }}</h2>
 
         <ObjectivesCard v-if="topic.objectives" :objectives="topic.objectives" />
 
         <div v-for="(block, index) in topic.content" :key="'block-' + index">
+          
+          <template v-if="block && block.type">
+            
+            <p v-if="block.type === 'text'" class="text-paragraph">{{ block.value }}</p>
 
-          <p v-if="block.type === 'text'" class="text-paragraph">{{ block.value }}</p>
+            <TheoryCard v-if="block.type === 'theory'" :theory="block" />
 
-          <TheoryCard v-if="block.type === 'theory'" :theory="block" />
+            <DefinitionCard v-if="block.type === 'definition'">
+              {{ block.value }}
+            </DefinitionCard>
 
-          <DefinitionCard v-if="block.type === 'definition'">
-            {{ block.value }}
-          </DefinitionCard>
-          <FactCard v-if="block.type === 'fact'" :text="block.value" />
-          <TaskCard v-if="block.type === 'task'" :task="block" />
-          <QuizCard v-if="block.type === 'quiz'" :question="block.question" />
-          <ComplexTestCard v-if="block.type === 'complex-test'" :testData="block" />
-          <QuizCollectionCard v-if="block.type === 'quiz-collection'" :title="block.title" :items="block.items" />
-          <FormulaCard v-if="block.type === 'formula'" :value="block.value" />
+            <FactCard v-if="block.type === 'fact'" :text="block.value" />
+
+            <TaskCard v-if="block.type === 'task'" :task="block" />
+
+            <QuizCard v-if="block.type === 'quiz'" :question="block.question" />
+
+            <ComplexTestCard v-if="block.type === 'complex-test'" :testData="block" />
+
+            <QuizCollectionCard v-if="block.type === 'quiz-collection'" :title="block.title" :items="block.items" />
+
+            <FormulaCard v-if="block.type === 'formula'" :value="block.value" />
+            
+          </template>
         </div>
 
         <div v-if="topic.image" class="topic-image-container">
