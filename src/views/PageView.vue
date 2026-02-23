@@ -44,7 +44,7 @@
         </div>
 
         <div v-if="topic.image" class="topic-image-container">
-          <img :src="'.' + topic.image" :alt="topic.topic_title" class="topic-illustration">
+          <img :src="baseUrl + topic.image.replace(/^\//, '')" :alt="topic.topic_title" class="topic-illustration">
         </div>
 
         <div class="extra-assignments" v-if="topic.assignments">
@@ -74,6 +74,9 @@ import TheoryCard from '@/components/TheoryCard.vue'
 
 export default {
   props: ['id'],
+  baseUrl() {
+    return import.meta.env.BASE_URL;
+  },
   components: {
     DefinitionCard,
     FactCard,
@@ -150,8 +153,7 @@ export default {
         9: "investiciya-and-progres", 10: "strategy-of-progres", 11: "otvetstvennost"
       };
       const folder = folderMap[this.currentSection.section_id] || 'default';
- 
-      return `./images/${folder}.png`;
+      return `${import.meta.env.BASE_URL}images/${folder}.png`;
     }
   }
 }
