@@ -9,7 +9,7 @@
             <main class="main-content">
                 <div class="hero-section" :class="{ 'hero-mini': $route.params.id }">
                     <h1>Основы предпринимательской деятельности</h1>
-                    <h2 v-if="!$route.params.id">Электронный учебник</h2>
+                    <h2 v-if="!$route.params.id">Электронный учебник - авторская программа</h2>
 
                     <nav v-if="$route.params.id && currentSectionTopics.length" class="breadcrumb-nav">
                         <router-link to="/" exact class="nav-link-home">
@@ -31,6 +31,8 @@
                 <router-view />
             </main>
         </div>
+
+        <GeminiChat :contextTopic="currentTopicTitle" :hideWidget="tocOpen" />
 
         <aside class="side-panel" :class="{ 'panel-open': tocOpen }">
             <div class="panel-header">Содержание</div>
@@ -76,106 +78,92 @@
 </template>
 
 <script>
-import lessonsData from '@/data/lessons.json'
+import lessonOne from '@/data/lessonOne.json'
+import lessonTwo from '@/data/lessonTwo.json'
+import lessonThree from '@/data/lessonThree.json'
+import lessonFour from '@/data/lessonFour.json'
+import lessonFive from '@/data/lessonFive.json'
+import lessonSix from '@/data/lessonSix.json'
+import lessonSeven from '@/data/lessonSeven.json'
+import lessonEight from '@/data/lessonEight.json'
+import lessonNine from '@/data/lessonNine.json'
+import lessonTen from '@/data/lessonTen.json'
+import lessonEleven from '@/data/lessonElewen.json'
+
+import GeminiChat from '../components/GeminiChat.vue'
 
 export default {
-    name: 'MainView',
-
+    components: { GeminiChat },
     data() {
         return {
             tocOpen: false,
-            isScrolled: false,
+            isScrolled: false, 
             openSections: [],
-            rawLessons: lessonsData.lessons,
-
+            rawLessons: [
+                lessonOne, lessonTwo, lessonThree,
+                lessonFour, lessonFive, lessonSix,
+                lessonSeven, lessonEight, lessonNine,
+                lessonTen, lessonEleven
+            ],
             folderMap: {
-                1: 'psyhology',
-                2: 'buisnes-idia',
-                3: 'buisnes-model',
-                4: 'marketing-and-explore',
-                5: 'strategy',
-                6: 'main-resources',
-                7: 'operacionaya-deyatelnost',
-                8: 'finans-model',
-                9: 'investiciya-and-progres',
-                10: 'strategy-of-progres',
-                11: 'otvetstvennost'
+                1: 'psyhology', 2: 'buisnes-idia', 3: 'buisnes-model',
+                4: 'marketing-and-explore', 5: 'strategy', 6: 'main-resources',
+                7: 'operacionaya-deyatelnost', 8: 'finans-model',
+                9: 'investiciya-and-progres', 10: 'strategy-of-progres', 11: 'otvetstvennost'
             }
         }
     },
-
     computed: {
-        baseUrl() {
-            return import.meta.env.BASE_URL
-        },
-
-        sectionsWithImages() {
-            return this.rawLessons.map(section => {
-                const folder = this.folderMap[section.section_id]
-
-                return {
-                    ...section,
-                    image: folder
-                        ? `${this.baseUrl}images/${folder}.png`
-                        : ''
-                }
-            })
-        },
-
-        currentSectionTopics() {
-            const topicId = this.$route.params.id
-            if (!topicId) return []
-
-            const secId = parseInt(topicId.split('.')[0])
-            const section = this.rawLessons.find(
-                s => s.section_id === secId
-            )
-
-            return section ? section.topics : []
+        currentTopicTitle() {
+        const topicId = this.$route.params.id;
+        if (!topicId) return 'Главная страница';
+        
+        for (const section of this.rawLessons) {
+            const topic = section.topics.find(t => t.topic_id === topicId);
+            if (topic) return topic.topic_title;
         }
+        return 'Учебник';
     },
 
+    sectionsWithImages() {
+        const base = import.meta.env.BASE_URL;
+        return this.rawLessons.map(section => ({
+            ...section,
+            image: `${base}images/${this.folderMap[section.section_id]}.png`
+        }));
+    },
+    currentSectionTopics() {
+        const id = this.$route.params.id;
+        if (!id) return [];
+        const secId = parseInt(id.split('.')[0]);
+        const section = this.rawLessons.find(s => s.section_id === secId);
+        return section ? section.topics : [];
+    }
+    },
     methods: {
-        toggleMenu() {
-            this.tocOpen = !this.tocOpen
-            document.body.style.overflow = this.tocOpen ? 'hidden' : ''
+        toggleMenu() { 
+            this.tocOpen = !this.tocOpen; 
         },
-
-        toggleSection(index) {
-            if (this.openSections.includes(index)) {
-                this.openSections = this.openSections.filter(i => i !== index)
+        toggleSection(i) {
+            if (this.openSections.includes(i)) {
+                this.openSections = this.openSections.filter(v => v !== i);
             } else {
-                this.openSections.push(index)
+                this.openSections.push(i);
             }
         },
-
-        handleScroll(event) {
-            this.isScrolled = event.target.scrollTop > 300
+        handleScroll(e) {
+            const scrollTop = e.target.scrollTop || 0;
+            this.isScrolled = scrollTop > 300;
         },
-
         backToTop() {
-            const container = this.$refs.scrollTarget
-            if (container) {
-                container.scrollTo({ top: 0, behavior: 'smooth' })
+            if (this.$refs.scrollTarget) {
+                this.$refs.scrollTarget.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
         },
-
         handleAnchorClick(topicId) {
-            this.scrollToTopic(topicId)
-        },
-
-        scrollToTopic(topicId) {
-            this.$nextTick(() => {
-                const el = document.getElementById(`topic-${topicId}`)
-                const container = this.$refs.scrollTarget
-
-                if (el && container) {
-                    container.scrollTo({
-                        top: el.offsetTop - 100,
-                        behavior: 'smooth'
-                    })
-                }
-            })
         }
     }
 }
@@ -548,7 +536,7 @@ h2 {
 
 .button_back-to-top {
     position: fixed;
-    bottom: 40px;
+    bottom: 30px;
     right: 40px;
     z-index: 1000;
 
@@ -584,6 +572,12 @@ h2 {
     .side-panel {
         width: 100%;
         padding-top: 100px;
+        padding-bottom: 120px !important; 
+        box-sizing: border-box;
+    }
+
+    .toc-nav {
+        padding-bottom: 50px;
     }
 
     h1 {

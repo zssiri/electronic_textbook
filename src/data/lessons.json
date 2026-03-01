@@ -3,7 +3,6 @@
         {
             "section_id": 1,
             "section_title": "Психология бизнес-мышления",
-            "topic_image": "psyhology.png",
             "topics": [
                 {
                     "topic_id": "1.1",
@@ -618,7 +617,6 @@
         {
             "section_id": 2,
             "section_title": "Выбор бизнес-идеи",
-            "topic_image": "buisnes-idia.png",
             "topics": [
                 {
                     "topic_id": "2.1",
@@ -984,7 +982,6 @@
         {
             "section_id": 3,
             "section_title": "Бизнес-модель и планирование",
-            "topic_image": "buisnes-model.png",
             "topics": [
                 {
                     "topic_id": "3.1",
@@ -1495,7 +1492,6 @@
         {
             "section_id": 4,
             "section_title": "Маркетинг и исследования",
-            "topic_image": "marketing-and-explore.png",
             "topics": [
                 {
                     "topic_id": "4.1",
@@ -2578,7 +2574,6 @@
         {
             "section_id": 5,
             "section_title": "Стратегия продаж",
-            "topic_image": "strategy.png",
             "topics": [
                 {
                     "topic_id": "5.1",
@@ -3265,7 +3260,6 @@
         {
             "section_id": 6,
             "section_title": "Ключевые ресурсы в бизнесе",
-            "topic_image": "main-resources.png",
             "topics": [
                 {
                     "topic_id": "6.1",
@@ -3626,7 +3620,6 @@
         {
             "section_id": 7,
             "section_title": "Операционная деятельность",
-            "topic_image": "operacionaya-deyatelnost.png",
             "topics": [
                 {
                     "topic_id": "7.1",
@@ -4235,7 +4228,6 @@
         {
             "section_id": 8,
             "section_title": "Финансовая модель бизнеса",
-            "topic_image": "finans-model.png",
             "topics": [
                 {
                     "topic_id": "8.1",
@@ -4621,7 +4613,6 @@
         {
             "section_id": 9,
             "section_title": "Привлечение инвестиций и меры государственной поддержки",
-            "topic_image": "investiciya-and-progres.png",
             "topics": [
                 {
                     "topic_id": "9.1",
@@ -4956,7 +4947,6 @@
         {
             "section_id": 10,
             "section_title": "Стратегия развития",
-            "topic_image": "strategy-of-progres.png",
             "topics": [
                 {
                     "topic_id": "10.1",
@@ -5140,7 +5130,6 @@
         {
             "section_id": 11,
             "section_title": "Ответственность предпринимателя",
-            "topic_image": "otvetstvennost.png",
             "topics": [
                 {
                     "topic_id": "11.1",

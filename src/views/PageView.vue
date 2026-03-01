@@ -1,57 +1,80 @@
 <template>
   <div v-if="currentSection" class="reader-page-wrapper">
     <div class="fullscreen-bg" :style="{ backgroundImage: `url('${resolveImage(currentSectionImage)}')` }"></div>
-  </div>
 
-  <div v-if="currentSection" class="reader-area">
-    <router-link to="/" class="btn-home">← На главную</router-link>
+    <div class="reader-area">
+      <router-link to="/" class="btn-home">← На главную</router-link>
 
-    <div v-for="topic in currentSection.topics" :key="topic.topic_id" :id="'topic-' + topic.topic_id"
-      class="topic-block">
-      <span class="badge">Тема {{ topic.topic_id }}</span>
+      <div v-for="topic in currentSection.topics" 
+           :key="topic.topic_id" 
+           :id="'topic-' + topic.topic_id"
+           class="topic-block">
+        
+        <span class="badge">Тема {{ topic.topic_id }}</span>
 
-      <div class="content-body">
-        <h2>{{ topic.topic_title }}</h2>
+        <div class="content-body">
+          <h2>{{ topic.topic_title }}</h2>
 
-        <ObjectivesCard v-if="topic.objectives" :objectives="topic.objectives" />
+          <ObjectivesCard v-if="topic.objectives" :objectives="topic.objectives" />
 
-        <div v-for="(block, index) in topic.content" :key="'block-' + index">
-          <template v-if="block && block.type">
-            <p v-if="block.type === 'text'" class="text-paragraph">
-              {{ block.value }}
-            </p>
+          <div v-for="(block, index) in topic.content" :key="'block-' + index">
+            <template v-if="block && block.type">
+              <p v-if="block.type === 'text'" class="text-paragraph">
+                {{ block.value }}
+              </p>
 
-            <TheoryCard v-if="block.type === 'theory'" :theory="block" />
-            <DefinitionCard v-if="block.type === 'definition'">
-              {{ block.value }}
-            </DefinitionCard>
-            <FactCard v-if="block.type === 'fact'" :text="block.value" />
-            <TaskCard v-if="block.type === 'task'" :task="block" />
-            <QuizCard v-if="block.type === 'quiz'" :question="block.question" />
-            <ComplexTestCard v-if="block.type === 'complex-test'" :testData="block" />
-            <QuizCollectionCard v-if="block.type === 'quiz-collection'" :title="block.title" :items="block.items" />
-            <FormulaCard v-if="block.type === 'formula'" :value="block.value" />
-          </template>
+              <TheoryCard v-if="block.type === 'theory'" :theory="block" />
+              
+              <DefinitionCard v-if="block.type === 'definition'">
+                {{ block.value }}
+              </DefinitionCard>
+              
+              <FactCard v-if="block.type === 'fact'" :text="block.value" />
+              
+              <TaskCard v-if="block.type === 'task'" :task="block" />
+              
+              <QuizCard v-if="block.type === 'quiz' || block.type === 'test'" :quiz="block" />
+              
+              <ComplexTestCard v-if="block.type === 'complex-test'" :testData="block" />
+              
+              <QuizCollectionCard v-if="block.type === 'quiz-collection'" 
+                                  :title="block.title || 'Тесты'" 
+                                  :items="block.items || block.value" />
+              
+              <FormulaCard v-if="block.type === 'formula'" :value="block.value" />
+            </template>
+          </div>
+
+          <div v-if="topic.topic_image" class="topic-image-container">
+            <img :src="resolveImage(topic.topic_image)" :alt="topic.topic_title" />
+          </div>
+
+          <div class="extra-assignments" v-if="topic.assignments">
+            <TaskCard v-for="(t, i) in topic.assignments" :key="'assign-' + i" :task="t" />
+          </div>
+
+          <QuestionsCard v-if="topic.questions" :questions="topic.questions" />
         </div>
 
-        <div v-if="topic.topic_image" class="topic-image-container">
-          <img :src="resolveImage(topic.topic_image)" :alt="topic.topic_title" />
-        </div>
-
-        <div class="extra-assignments" v-if="topic.assignments">
-          <TaskCard v-for="(t, i) in topic.assignments" :key="'assign-' + i" :task="t" />
-        </div>
-
-        <QuestionsCard v-if="topic.questions" :questions="topic.questions" />
+        <hr class="topic-divider" />
       </div>
-
-      <hr class="topic-divider" />
     </div>
   </div>
+  <div v-else class="loading-state">Загрузка раздела...</div>
 </template>
 
 <script>
-import lessonsData from '@/data/lessons.json'
+import lessonOne from '@/data/lessonOne.json'
+import lessonTwo from '@/data/lessonTwo.json'
+import lessonThree from '@/data/lessonThree.json'
+import lessonFour from '@/data/lessonFour.json'
+import lessonFive from '@/data/lessonFive.json'
+import lessonSix from '@/data/lessonSix.json'
+import lessonSeven from '@/data/lessonSeven.json'
+import lessonEight from '@/data/lessonEight.json'
+import lessonNine from '@/data/lessonNine.json'
+import lessonTen from '@/data/lessonTen.json'
+import lessonEleven from '@/data/lessonElewen.json'
 
 import TaskCard from '@/components/TaskCard.vue'
 import QuizCard from '@/components/QuizCard.vue'
@@ -65,89 +88,71 @@ import FormulaCard from '@/components/FormulaCard.vue'
 import TheoryCard from '@/components/TheoryCard.vue'
 
 export default {
+  name: 'PageView',
   props: ['id'],
 
   components: {
-    DefinitionCard,
-    FactCard,
-    QuizCard,
-    QuizCollectionCard,
-    TaskCard,
-    ObjectivesCard,
-    QuestionsCard,
-    ComplexTestCard,
-    FormulaCard,
-    TheoryCard
+    DefinitionCard, FactCard, QuizCard, QuizCollectionCard,
+    TaskCard, ObjectivesCard, QuestionsCard, ComplexTestCard,
+    FormulaCard, TheoryCard
+  },
+
+  data() {
+    return {
+      allLessons: [
+        lessonOne, lessonTwo, lessonThree, lessonFour, lessonFive,
+        lessonSix, lessonSeven, lessonEight, lessonNine, lessonTen, lessonEleven
+      ]
+    }
   },
 
   computed: {
     currentSection() {
-      if (!this.id) return null
-      const sectionId = parseInt(this.id.split('.')[0])
-      return lessonsData.lessons.find(
-        s => s.section_id === sectionId
-      )
+      if (!this.id) return null;
+      const sectionId = parseInt(this.id.split('.')[0]);
+      return this.allLessons.find(s => s.section_id === sectionId);
     },
 
     currentSectionImage() {
-      if (!this.currentSection) return ''
-
+      if (!this.currentSection) return '';
       const map = {
-        1: 'psyhology.png',
-        2: 'buisnes-idia.png',
-        3: 'buisnes-model.png',
-        4: 'marketing-and-explore.png',
-        5: 'strategy.png',
-        6: 'main-resources.png',
-        7: 'operacionaya-deyatelnost.png',
-        8: 'finans-model.png',
-        9: 'investiciya-and-progres.png',
-        10: 'strategy-of-progres.png',
-        11: 'otvetstvennost.png'
-      }
-
-      return map[this.currentSection.section_id] || ''
+        1: 'psyhology.png', 2: 'buisnes-idia.png', 3: 'buisnes-model.png',
+        4: 'marketing-and-explore.png', 5: 'strategy.png', 6: 'main-resources.png',
+        7: 'operacionaya-deyatelnost.png', 8: 'finans-model.png',
+        9: 'investiciya-and-progres.png', 10: 'strategy-of-progres.png', 11: 'otvetstvennost.png'
+      };
+      return map[this.currentSection.section_id] || '';
     }
   },
 
   methods: {
     resolveImage(file) {
-      return `/electronic_textbook/images/${file}`
+      return `${import.meta.env.BASE_URL}images/${file}`;
     },
 
     scrollToTopic(topicId) {
       this.$nextTick(() => {
-        const el = document.getElementById(`topic-${topicId}`)
-        const container = document.querySelector('.scroll-container')
+        const el = document.getElementById(`topic-${topicId}`);
+        const container = document.querySelector('.scroll-container');
         if (el && container) {
           container.scrollTo({
-            top: el.offsetTop - 40,
+            top: el.offsetTop - 20,
             behavior: 'smooth'
-          })
+          });
         }
-      })
+      });
     }
   },
 
   watch: {
     id(newId) {
-      this.scrollToTopic(newId)
-    },
-    '$route.hash'(newHash) {
-      if (newHash) {
-        const topicId = newHash.replace('#topic-', '')
-        this.scrollToTopic(topicId)
-      }
+      if (newId) this.scrollToTopic(newId);
     }
   },
 
   mounted() {
-    if (this.$route.hash || this.id) {
-      const targetId = this.$route.hash
-        ? this.$route.hash.replace('#topic-', '')
-        : this.id
-
-      setTimeout(() => this.scrollToTopic(targetId), 600)
+    if (this.id) {
+      setTimeout(() => this.scrollToTopic(this.id), 500);
     }
   }
 }
@@ -312,16 +317,19 @@ export default {
   }
 
   .fullscreen-bg {
-    width: 100%;           
-    height: 100vh;           
-    background-position: center 20%; 
-    background-size: 80%;    
-    opacity: 0.05;          
-    position: fixed;
-    top: 0;
-    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-position: center 20%;
+    background-size: 60%;
+    opacity: 0.04;
+  }
+
+  .reader-area {
+    padding: 20px 15px;
+    margin: 0;
   }
 }
+
 
 @media (max-width: 480px) {
   .content-body h2 {
@@ -333,8 +341,8 @@ export default {
   }
 
   .fullscreen-bg {
-      background-size: 100%; 
-      background-position: center 15%;
-    }
+    background-size: 100%;
+    background-position: center 15%;
+  }
 }
 </style>
